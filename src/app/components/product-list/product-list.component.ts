@@ -12,7 +12,9 @@ export class ProductListComponent implements OnInit {
   products: Product[];		// Define a (public) property 'products' which is of type Product[]
 
   // Inject our ProductService via constructor injection
-  constructor(private productService: ProductService) { }
+  constructor(private productService: ProductService) {
+    this.products = [];
+  }
 
   ngOnInit(): void {				// Similar to @PostConstruct from Spring
     this.listProducts();    // On initialization execute this function
