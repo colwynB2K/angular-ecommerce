@@ -1,12 +1,12 @@
 export class Product {
 
-  constructor(active: boolean,
-              created: Date,
-              description: string,
-              imageUrl: string,
-              lastUpdated: Date,
-              name: string,
-              sku: string,
-              unitPrice: number,
-              unitsInStock: number) {}
+  constructor(public active: boolean,
+              public created: Date,
+              public description: string,
+              public imageUrl: string,
+              public lastUpdated: Date,
+              public name: string,
+              public sku: string,
+              public unitPrice: number,
+              public unitsInStock: number) {}
 }
