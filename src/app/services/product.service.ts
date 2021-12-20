@@ -17,7 +17,10 @@ export class ProductService {
   constructor(private httpClient: HttpClient) { }
 
   // This function returns an Observable so components/classes can subscribe to it
-  getProductList(): Observable<Product[]> {
+  getProductList(categoryId: number): Observable<Product[]> {
+
+    //@TODO: build URL based on category id
+
     return this.httpClient.get<GetResponse>(this.baseUrl)
                           .pipe(
                             map(response => response._embedded.products)
