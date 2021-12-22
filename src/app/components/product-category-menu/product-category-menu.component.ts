@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {ProductCategory} from "../../common/product-category";
+import { ProductCategory } from "../../common/product-category";
+import { ProductCategoryService } from "../../services/product-category.service";
 
 @Component({
   selector: 'app-product-category-menu',
@@ -10,7 +11,9 @@ export class ProductCategoryMenuComponent implements OnInit {
 
   productCategories: ProductCategory[];
 
-  constructor(private productCategoryService: ProductCategoryService) { }		// Inject ProductCategoryService
+  constructor(private productCategoryService: ProductCategoryService) { // Inject ProductCategoryService
+    this.productCategories = [];
+  }
 
   ngOnInit(): void {
     this.listProductCategories();
