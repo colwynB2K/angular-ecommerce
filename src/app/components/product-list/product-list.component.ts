@@ -33,10 +33,9 @@ export class ProductListComponent implements OnInit {
 
     if (hasCategoryId) {
       // Get the 'id' value and convert the string to a number using the '+' symbol
-      // @ts-ignore (Suppress Object is possibly null error)
-      this.currentCategoryId = +this.route.snapshot.paramMap.get('id');
+      this.currentCategoryId = +this.route.snapshot.paramMap.get('id')!;  // ! Do no concern about possible null values
     } else {
-      // no category id available, just default to catehory id 1
+      // no category id available, just default to category id 1
       this.currentCategoryId = 1;
     }
 

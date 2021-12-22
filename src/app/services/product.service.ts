@@ -19,9 +19,9 @@ export class ProductService {
   // This function returns an Observable so components/classes can subscribe to it
   getProductList(categoryId: number): Observable<Product[]> {
 
-    const url = `${this.baseUrl}/search/findByCategoryId?id=${categoryId}`;
+    const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${categoryId}`;
 
-    return this.httpClient.get<GetResponse>(url)
+    return this.httpClient.get<GetResponse>(searchUrl)
                           .pipe(
                             map(response => response._embedded.products)
                           ); // This describes the structure of the JSON response from Spring Data REST and map it to a Product array voa the GetResponse interface
