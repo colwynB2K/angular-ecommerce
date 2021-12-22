@@ -1,5 +1,4 @@
 export class ProductCategory {
 
-  constructor(private _id: number, private _name: string) {
-  }
+  constructor(public id: number, public name: string) { }
 }
