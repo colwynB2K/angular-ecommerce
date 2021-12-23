@@ -16,24 +16,25 @@ export class ProductService {
   // Our service also uses dependency injection... the HttpClient is injected into it via constructor injection
   constructor(private httpClient: HttpClient) { }
 
+  private getProducts(searchUrl: string) {
+    return this.httpClient.get<GetResponse>(searchUrl)
+      .pipe(
+        map(response => response._embedded.products)
+      );
+  }
+
   // This function returns an Observable so components/classes can subscribe to it
   getProductList(categoryId: number): Observable<Product[]> {
 
     const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${categoryId}`;
 
-    return this.httpClient.get<GetResponse>(searchUrl)
-                          .pipe(
-                            map(response => response._embedded.products)
-                          ); // This describes the structure of the JSON response from Spring Data REST and map it to a Product array voa the GetResponse interface
+    return this.getProducts(searchUrl); // This describes the structure of the JSON response from Spring Data REST and map it to a Product array voa the GetResponse interface
   }
 
   searchProductsByKeyword(keyword: string): Observable<Product[]> {
     const searchUrl = `${this.baseUrl}/search/findByNameContainingIgnoreCase?keyword=${encodeURIComponent(keyword)}`;
 
-    return this.httpClient.get<GetResponse>(searchUrl)
-      .pipe(
-        map(response => response._embedded.products)
-      );
+    return this.getProducts(searchUrl);
   }
 }
 
