@@ -28,7 +28,7 @@ export class ProductService {
   }
 
   searchProductsByKeyword(keyword: string): Observable<Product[]> {
-    const searchUrl = `${this.baseUrl}/search/findByNameContaining?keyword=${keyword}`;
+    const searchUrl = `${this.baseUrl}/search/findByNameContainingIgnoreCase?keyword=${keyword}`;
 
     return this.httpClient.get<GetResponse>(searchUrl)
       .pipe(
