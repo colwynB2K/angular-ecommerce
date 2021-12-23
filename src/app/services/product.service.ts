@@ -26,6 +26,15 @@ export class ProductService {
                             map(response => response._embedded.products)
                           ); // This describes the structure of the JSON response from Spring Data REST and map it to a Product array voa the GetResponse interface
   }
+
+  searchProductsByKeyword(keyword: string): Observable<Product[]> {
+    const searchUrl = `${this.baseUrl}/search/findByNameContaining?keyword=${keyword}`;
+
+    return this.httpClient.get<GetResponse>(searchUrl)
+      .pipe(
+        map(response => response._embedded.products)
+      );
+  }
 }
 
 interface GetResponse {

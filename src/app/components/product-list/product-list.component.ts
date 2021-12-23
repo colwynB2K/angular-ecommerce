@@ -12,12 +12,14 @@ export class ProductListComponent implements OnInit {
 
   products: Product[];		// Define a (public) property 'products' which is of type Product[]
   currentCategoryId: number;
+  currentKeyword: string;
 
   // Inject our ProductService via constructor injection
   constructor(private productService: ProductService,
               private route: ActivatedRoute) {                    // Current active route that loaded the component, which can be used for accessing route parameters
     this.products = [];
     this.currentCategoryId = 1;
+    this.currentKeyword = '';
   }
 
   ngOnInit(): void {				// Similar to @PostConstruct from Spring
@@ -36,7 +38,8 @@ export class ProductListComponent implements OnInit {
 
     if (hasKeyword) {
       // now search for the products using keyword
-      this.productService.searchProductsByKeyword(this.route.snapshot.paramMap.get('keyword')).subscribe(
+      this.currentKeyword = '' + this.route.snapshot.paramMap.get('keyword'); // Use + to put empty string in the variable in case the keyword value would be null
+      this.productService.searchProductsByKeyword(this.currentKeyword).subscribe(
         data => {
           this.products = data;
         }
@@ -44,7 +47,7 @@ export class ProductListComponent implements OnInit {
     } else {
       if (hasCategoryId) {
         // Get the 'id' value and convert the string to a number using the '+' symbol
-        this.currentCategoryId = +this.route.snapshot.paramMap.get('id')!;  // ! Do no concern about possible null values
+        this.currentCategoryId = + this.route.snapshot.paramMap.get('id')!;  // ! Do no concern about possible null values
       } else {
         // no category id available, just default to category id 1
         this.currentCategoryId = 1;
