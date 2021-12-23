@@ -17,6 +17,10 @@
           </div>
         </div>
 
+        <!-- If no products available then display a Not Found message with Bootstrap styles, role attribute is for accessibility like screen readers for disable ppl -->
+        <div *ngIf="products?.length == 0" class="alert alert-warning col-md-12" role="alert"> <!-- ? is a Safe navigation operatior which guards against null and undefined values in property paths. So now if products is null or undefined, this also returns true  -->
+          No products found.
+        </div>
 
       </div>
 
