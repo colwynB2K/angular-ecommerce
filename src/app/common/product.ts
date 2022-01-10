@@ -1,6 +1,7 @@
 export class Product {
 
-  constructor(public active: boolean,
+  constructor(public id: number,
+              public active: boolean,
               public created: Date,
               public description: string,
               public imageUrl: string,
