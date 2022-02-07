@@ -36,6 +36,13 @@ export class ProductService {
 
     return this.getProducts(searchUrl);
   }
+
+  getProduct(productId: number): Observable<Product> {
+    // need to build URL based on product id
+    const productUrl = `${this.baseUrl}/${productId}`;			// http://localhost:8080/api/products/${productId}
+
+    return this.httpClient.get<Product>(productUrl);				// Call REST API which returns an Observable. The JSON Data returned can be converted directly to a Product object => no need to unwrap the JSPN from Spring Data REST. There is no _embedded entry. The JSON properties mapp directly to properties in the Product TypeScript class.
+  }
 }
 
 interface GetResponse {
