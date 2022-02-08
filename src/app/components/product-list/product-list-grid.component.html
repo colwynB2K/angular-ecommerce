@@ -39,7 +39,8 @@
               </div>
               <div class="col-md-3 mt-2" style="text-align: right;">
                 <span class=""mr-2>Page Size</span>
-                <select #pageSizeSelect (change)="updatePageSize($event.target.value)"><!-- event binding for on change event, set a #reference variable on the HTML element to pass the value of this specific HTML element -->
+                <select #pageSizeSelect (change)="updatePageSize(pageSizeSelect.value)"><!-- event binding for on change event, set a #reference variable on the HTML element to pass the value of this specific HTML element -->
+                  <option>2</option>
                   <option selected="true">5</option>
                   <option>10</option>
                   <option>20</option>
