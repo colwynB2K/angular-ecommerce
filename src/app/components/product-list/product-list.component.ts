@@ -12,13 +12,20 @@ export class ProductListComponent implements OnInit {
 
   products: Product[];		// Define a (public) property 'products' which is of type Product[]
   currentCategoryId: number;
+  previousCategoryId: number;
   hasKeyword: boolean;
+
+  // new properties for pagination
+  pageNumber: number = 1;
+  pageSize: number = 10;
+  totalElements: number = 0;
 
   // Inject our ProductService via constructor injection
   constructor(private productService: ProductService,
               private route: ActivatedRoute) {                    // Current active route that loaded the component, which can be used for accessing route parameters
     this.products = [];
     this.currentCategoryId = 1;
+    this.previousCategoryId = this.currentCategoryId;
     this.hasKeyword = false;
   }
 
@@ -53,6 +60,15 @@ export class ProductListComponent implements OnInit {
     // check if 'id' parameter is available, so we know we can use it or need to use a default
     const hasCategoryId: boolean = this.route.snapshot.paramMap.has('id');	// route.snapshot means use the activated route and get its current state. From that get the Map of all the route parameters. Check that it has a 'id'  parameter value.
 
+    // Note: Angular will reuse a component if it is currently being viewed in the browser!!! So it is possible that there is some leftover state from the previous call
+    // So we need to check if we have a different category ID than before and in that case we have to reset the pageNumber
+    if (this.currentCategoryId != this.previousCategoryId) {
+      this.pageNumber = 1;
+    } else {
+      this.previousCategoryId = this.currentCategoryId;
+    }
+    console.log(`currentCategoryId = ${this.currentCategoryId}, pageNumber = ${this.pageNumber}`);
+
     if (hasCategoryId) {
       // Get the 'id' value and convert the string to a number using the '+' symbol
       this.currentCategoryId = + this.route.snapshot.paramMap.get('id')!;  // ! Do no concern about possible null values
@@ -61,12 +77,28 @@ export class ProductListComponent implements OnInit {
       this.currentCategoryId = 1;
     }
 
-    // Get the products for the given category id
+/*    // Get the products for the given category id
     this.productService.getProductList(this.currentCategoryId).subscribe(			// Get product list via asynchronous REST call and subscribe to the response to process it when it arrives
       data => {
         this.products = data;							              // Assign the Product[] coming from the ProductService to the products property in this ProductListComponent class
       }
-    )
+    )*/
+
+    // Get the products for the given category id with pagination suport
+    this.productService.getPageableProductList(this.pageNumber - 1, 				// - 1 as in the Angular pagination component, the pages are 1 based while in Spring Data REST, the pages are 0 based
+                                                this.pageSize,
+                                                this.currentCategoryId)
+                                              .subscribe(this.processResult());			                  // Get product list via asynchronous REST call and subscribe to the response to process it when it arrives
+
+  }
+
+  private processResult() {
+    return (data: { _embedded: { products: Product[]; }; page: { number: number; size: number; totalElements: number; }; }) => {
+      this.products = data._embedded.products;
+      this.pageNumber = data.page.number + 1; 																	// In the Angular pagination component the pages are 1 based while in Spring Data REST, the pages are 0 based
+      this.pageSize = data.page.size;
+      this.totalElements = data.page.totalElements;
+    }
   }
 
 }
