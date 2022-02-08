@@ -14,6 +14,7 @@ export class ProductListComponent implements OnInit {
   currentCategoryId: number;
   previousCategoryId: number;
   hasKeyword: boolean;
+  previousKeyword: string = '';
 
   // new properties for pagination
   pageNumber: number = 1;
@@ -49,11 +50,18 @@ export class ProductListComponent implements OnInit {
   handleSearchProducts() {
     // now search for the products using keyword
     const currentKeyword: string = '' + this.route.snapshot.paramMap.get('keyword'); // Use + to put empty string in the variable in case the keyword value would be null
-    this.productService.searchProductsByKeyword(currentKeyword).subscribe(
-      data => {
-        this.products = data;
-      }
-    )
+
+    // Note: Angular will reuse a component if it is currently being viewed in the browser!!! So it is possible that there is some leftover state from the previous call
+    // So we need to check if we have a different keyword than before and in that case we have to reset the pageNumber
+    if (currentKeyword != this.previousKeyword) {
+      this.pageNumber = 1;
+    }
+
+    // Get the products for the given category id with pagination suport
+    this.productService.searchProductsByKeyword(this.pageNumber - 1, 				// - 1 as in the Angular pagination component, the pages are 1 based while in Spring Data REST, the pages are 0 based
+      this.pageSize,
+      currentKeyword)
+      .subscribe(this.processResult());			                  // Get product list via asynchronous REST call and subscribe to the response to process it when it arrives
   }
 
   handleListProducts() {
@@ -75,13 +83,6 @@ export class ProductListComponent implements OnInit {
       // no category id available, just default to category id 1
       this.currentCategoryId = 1;
     }
-
-/*    // Get the products for the given category id
-    this.productService.getProductList(this.currentCategoryId).subscribe(			// Get product list via asynchronous REST call and subscribe to the response to process it when it arrives
-      data => {
-        this.products = data;							              // Assign the Product[] coming from the ProductService to the products property in this ProductListComponent class
-      }
-    )*/
 
     // Get the products for the given category id with pagination suport
     this.productService.getPageableProductList(this.pageNumber - 1, 				// - 1 as in the Angular pagination component, the pages are 1 based while in Spring Data REST, the pages are 0 based

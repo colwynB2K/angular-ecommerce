@@ -39,10 +39,11 @@ export class ProductService {
     return this.httpClient.get<GetResponseProducts>(url);
   }
 
-  searchProductsByKeyword(keyword: string): Observable<Product[]> {
-    const searchUrl = `${this.baseUrl}/search/findByNameContainingIgnoreCase?keyword=${encodeURIComponent(keyword)}`;
+  searchProductsByKeyword(currentPage: number, pageSize: number, keyword: string): Observable<GetResponseProducts> {
+    const searchUrl = `${this.baseUrl}/search/findByNameContainingIgnoreCase?keyword=${encodeURIComponent(keyword)}`
+      + `&page=${currentPage}&size=${pageSize}`;      // Spring Data REST supports pagination OOTB, we only need to send the parameters for page and size to trigger it
 
-    return this.getProducts(searchUrl);
+    return this.httpClient.get<GetResponseProducts>(searchUrl);
   }
 
   getProduct(productId: number): Observable<Product> {
