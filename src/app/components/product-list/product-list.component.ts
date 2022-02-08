@@ -64,9 +64,8 @@ export class ProductListComponent implements OnInit {
     // So we need to check if we have a different category ID than before and in that case we have to reset the pageNumber
     if (this.currentCategoryId != this.previousCategoryId) {
       this.pageNumber = 1;
-    } else {
-      this.previousCategoryId = this.currentCategoryId;
     }
+    this.previousCategoryId = this.currentCategoryId;
     console.log(`currentCategoryId = ${this.currentCategoryId}, pageNumber = ${this.pageNumber}`);
 
     if (hasCategoryId) {
