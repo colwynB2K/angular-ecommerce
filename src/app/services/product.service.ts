@@ -17,7 +17,7 @@ export class ProductService {
   constructor(private httpClient: HttpClient) { }
 
   private getProducts(searchUrl: string) {
-    return this.httpClient.get<GetResponse>(searchUrl)
+    return this.httpClient.get<GetResponseProducts>(searchUrl)
       .pipe(
         map(response => response._embedded.products)
       );
@@ -45,8 +45,14 @@ export class ProductService {
   }
 }
 
-interface GetResponse {
+interface GetResponseProducts {
   _embedded: {
     products: Product[];			// Unwrap the JSON from the _embedded JSON entry and map it to a Product array
+  },
+  page: {                     // Define how to map the pagination section of the JSON response to Typescript properties
+    size: number,
+    totalElements: number,
+    totalPages: number,
+    number: number
   }
 }
