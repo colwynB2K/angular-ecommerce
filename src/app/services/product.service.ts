@@ -17,7 +17,7 @@ export class ProductService {
   constructor(private httpClient: HttpClient) { }
 
   private getProducts(searchUrl: string) {
-    return this.httpClient.get<GetResponseProducts>(searchUrl)
+    return this.httpClient.get<GetResponseProducts>(searchUrl)    // This describes the structure of the JSON response from Spring Data REST and map it to a Product array via the GetResponseProducts interface
       .pipe(
         map(response => response._embedded.products)
       );
@@ -28,7 +28,15 @@ export class ProductService {
 
     const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${categoryId}`;
 
-    return this.getProducts(searchUrl); // This describes the structure of the JSON response from Spring Data REST and map it to a Product array voa the GetResponse interface
+    return this.getProducts(searchUrl);
+  }
+
+  // Get a list of products with pagination support
+  getPageableProductList(currentPage: number, pageSize: number, categoryId: number): Observable<GetResponseProducts> {
+    const url = `${this.baseUrl}/search/findByCategoryId?id=${categoryId}`
+      + `&page=${currentPage}&size=${pageSize}`;      // Spring Data REST supports pagination OOTB, we only need to send the parameters for page and size to trigger it
+
+    return this.httpClient.get<GetResponseProducts>(url);
   }
 
   searchProductsByKeyword(keyword: string): Observable<Product[]> {
